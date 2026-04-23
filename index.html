@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spend Wise</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+
+    <header id="site-header">
+        <div class="header-inner">
+            <div class="brand">
+                <span class="brand-mark">SW</span>
+                <span class="brand-name">Spend Wise</span>
+            </div>
+            <div class="header-meta"><span id="current-month-label">April 2026</span></div>
+        </div>
+    </header>
+        
+    <nav class="tab-nav" aria-label="App sections">
+        <div class="tab-nav-inner">
+            <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
+            <button class="tab-tbn" data-tab="income">Income</button>
+            <button class="tab-btn" data-tab="expenses">Expenses</button>
+            <button class="tab-tbn" data-tab="charts">Charts</button>
+            <button class="tab-tbn" data-tab="settings">Budget &amp; Settings</button>  
+            <button class="tab-tbn tab-tbn--help" id="help-btn" data-tab="">? Help</button>
+        </div>
+    </nav>
+
+    <main id="main-content">
+
+        <div class="tab-panel active" id="tab-dashboard">
+            <h2>Dashboard Placeholder</h2>
+        </div>
+
+        <div class="tab-panel" id="tab-income">
+            <h2>Income Placeholder</h2>
+        </div>
+
+        <div class="tab-panel" id="tab-expenses">
+            <h2>Expenses Placeholder</h2>
+        </div>
+
+        <div class="tab-panel" id="tab-charts">
+            <h2>Charts Placeholder</h2>
+        </div>
+
+        <div class="tab-panel" id="tab-settings">
+            <h2>Settings Placeholder</h2>
+        </div>
+
+    </main>
+
+    <footer id="site-footer">
+        <p class="footer-text">2026 Spend Wise &mdash; all data stored locally on your device.</p>
+    </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
