@@ -15,6 +15,7 @@
 </head>
 <body>
 
+<body>
 <div id="app">
 
   <!-- HEADER -->
@@ -40,13 +41,14 @@
     </div>
   </nav>
 
-  <!-- MAIN CONTENT AREA -->
   <main id="main-content">
 
     <!-- ══════════════════════════════════
          TAB: DASHBOARD
     ══════════════════════════════════ -->
     <div class="tab-panel active" id="tab-dashboard">
+
+      <!-- Hero summary card -->
       <div id="summary-card">
         <div class="stat-card stat-card--hero">
           <div class="hero-body">
@@ -56,6 +58,7 @@
               <p class="stat-sublabel" id="expense-count">No expenses yet</p>
               <span class="over-budget-pill" id="over-budget-pill">⚠ Over budget</span>
             </div>
+            <!-- Budget progress (shown only when budget is set) -->
             <div id="budget-progress-wrap" hidden style="min-width:200px;flex:1;max-width:280px;">
               <div class="budget-bar-meta">
                 <span id="budget-spent-label">₦0 spent</span>
@@ -64,10 +67,15 @@
               <div class="budget-bar-track">
                 <div class="budget-bar-fill" id="budget-bar-fill" style="width:0%"></div>
               </div>
+              <div class="budget-bar-meta" style="margin-top:6px;">
+                <span id="budget-remaining-label" style="color:rgba(255,255,255,.55)"></span>
+                <span id="budget-pct-label" style="color:rgba(255,255,255,.55)"></span>
+              </div>
             </div>
           </div>
         </div>
 
+        <!-- Secondary stat cards -->
         <div class="stat-grid" style="margin-top:var(--sp-3);">
           <div class="stat-card stat-card--income">
             <p class="stat-label">Total Income</p>
@@ -84,25 +92,59 @@
             <p class="stat-value stat-value--gold" id="dash-budget-left">₦0</p>
             <p class="stat-sub" id="dash-budget-sub">this month</p>
           </div>
+          <div class="stat-card">
+            <p class="stat-label">Top Category</p>
+            <p class="stat-value" id="dash-top-cat">—</p>
+            <p class="stat-sub" id="dash-top-cat-sub">by spending</p>
+          </div>
+          <div class="stat-card">
+            <p class="stat-label">Avg / Expense</p>
+            <p class="stat-value" id="dash-avg">—</p>
+            <p class="stat-sub">per transaction</p>
+          </div>
         </div>
       </div>
+
+      <!-- Quick breakdown -->
+      <div class="card card-breakdown">
+        <div class="section-header">
+          <h2 class="section-title">Spending by Category</h2>
+        </div>
+        <div class="breakdown-list" id="breakdown-list">
+          <div class="empty-state">
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="5" y="9" width="26" height="20" rx="3" stroke="currentColor" stroke-width="1.4"/><path d="M5 15h26" stroke="currentColor" stroke-width="1.4"/><path d="M11 22h4M11 26h8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+            <p>Nothing tracked yet.</p>
+            <p class="empty-hint">Head to the Expenses tab to log your first spend — even a ₦100 recharge card counts!</p>
+          </div>
+        </div>
+        <div id="dashboard-insight" class="insight-box" style="display:none">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.3"/><path d="M8 7v4M8 5.5v.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+          <p id="dashboard-insight-text"></p>
+        </div>
+      </div>
+
     </div><!-- /tab-dashboard -->
+
 
     <!-- ══════════════════════════════════
          TAB: INCOME
     ══════════════════════════════════ -->
     <div class="tab-panel" id="tab-income">
+
+      <!-- Add income form -->
       <div class="card card-income">
         <div class="section-header">
           <h2 class="section-title">Add Income</h2>
+          <button class="btn btn--outline btn--sm" id="toggle-income-form-btn" aria-expanded="true">Hide form</button>
         </div>
+
         <form id="income-form" class="collapsible-form" novalidate>
           <div class="form-row">
             <div class="form-group">
               <label class="form-label" for="inc-amount">Amount (₦)</label>
               <div class="input-wrap">
                 <span class="input-prefix">₦</span>
-                <input type="number" id="inc-amount" class="form-input" placeholder="15000" min="1" step="any" required/>
+                <input type="number" id="inc-amount" class="form-input" placeholder="15000" min="1" step="any" autocomplete="off" required/>
               </div>
             </div>
             <div class="form-group">
@@ -113,6 +155,8 @@
                 <option value="Part-time">Part-time Job</option>
                 <option value="Freelance">Freelance</option>
                 <option value="Gift">Gift / Transfer</option>
+                <option value="Scholarship">Scholarship</option>
+                <option value="Business">Business / Side Hustle</option>
                 <option value="Other">Other</option>
               </select>
             </div>
@@ -121,37 +165,53 @@
               <input type="date" id="inc-date" class="form-input" required/>
             </div>
           </div>
+          <div class="form-group" style="margin-top:0">
+            <label class="form-label" for="inc-note">Note <span class="optional-tag">(optional)</span></label>
+            <input type="text" id="inc-note" class="form-input" placeholder="e.g. January allowance from Dad" maxlength="80" autocomplete="off"/>
+          </div>
           <div class="form-footer">
             <button type="submit" class="btn btn--income">Add Income</button>
-            <span id="income-save-feedback" class="save-feedback" hidden>Saved.</span>
+            <span class="kbd-hint"><kbd>⌘</kbd><kbd>↵</kbd></span>
+            <span id="income-save-feedback" class="save-feedback" aria-live="polite" hidden>Saved.</span>
           </div>
         </form>
       </div>
 
-      <div class="card" style="margin-top: 24px;">
+      <!-- Income list -->
+      <div class="card">
         <div class="section-header">
           <h2 class="section-title">Income History</h2>
           <button id="clear-income-btn" class="btn btn--clear btn--sm">Clear all</button>
         </div>
+        <div id="income-empty" class="empty-state">
+          <svg width="36" height="36" viewBox="0 0 36 36" fill="none"><circle cx="18" cy="18" r="13" stroke="currentColor" stroke-width="1.4"/><path d="M18 11v7l4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          <p>No income added yet — track your allowance or earnings here.</p>
+        </div>
         <ul id="income-list" class="expense-list" role="list"></ul>
       </div>
+
     </div><!-- /tab-income -->
+
 
     <!-- ══════════════════════════════════
          TAB: EXPENSES
     ══════════════════════════════════ -->
     <div class="tab-panel" id="tab-expenses">
+
+      <!-- Add expense form -->
       <div class="card card-expenses">
         <div class="section-header">
           <h2 class="section-title">Add Expense</h2>
+          <button class="btn btn--outline btn--sm" id="toggle-expense-form-btn" aria-expanded="true">Hide form</button>
         </div>
+
         <form id="expense-form" class="collapsible-form" novalidate>
           <div class="form-row">
             <div class="form-group">
               <label class="form-label" for="exp-amount">Amount (₦)</label>
               <div class="input-wrap">
                 <span class="input-prefix">₦</span>
-                <input type="number" id="exp-amount" class="form-input" placeholder="2500" min="1" step="any" required/>
+                <input type="number" id="exp-amount" class="form-input" placeholder="2500" min="1" step="any" autocomplete="off" required/>
               </div>
             </div>
             <div class="form-group">
@@ -173,32 +233,121 @@
               <input type="date" id="exp-date" class="form-input" required/>
             </div>
           </div>
+          <div class="form-group" style="margin-top:0">
+            <label class="form-label" for="exp-note">Note <span class="optional-tag">(optional)</span></label>
+            <input type="text" id="exp-note" class="form-input" placeholder="e.g. Lunch at Chicken Republic" maxlength="80" autocomplete="off"/>
+          </div>
           <div class="form-footer">
             <button type="submit" class="btn btn--primary">Add Expense</button>
-            <span id="expense-save-feedback" class="save-feedback" hidden>Saved.</span>
+            <span class="kbd-hint"><kbd>⌘</kbd><kbd>↵</kbd></span>
+            <span id="expense-save-feedback" class="save-feedback" aria-live="polite" hidden>Saved.</span>
           </div>
         </form>
       </div>
 
-      <div class="card" style="margin-top: 24px;">
+      <!-- Expense list -->
+      <div class="card">
         <div class="section-header">
           <h2 class="section-title">All Expenses</h2>
-          <button id="clear-expenses-btn" class="btn btn--clear btn--sm">Clear all</button>
+          <div class="list-controls">
+            <select id="filter-category" class="form-input form-select form-select--sm">
+              <option value="all">All categories</option>
+            </select>
+            <select id="sort-order" class="form-input form-select form-select--sm">
+              <option value="newest">Newest first</option>
+              <option value="oldest">Oldest first</option>
+              <option value="highest">Highest amount</option>
+              <option value="lowest">Lowest amount</option>
+            </select>
+            <button id="clear-expenses-btn" class="btn btn--clear btn--sm">Clear all</button>
+          </div>
+        </div>
+        <div id="expense-empty" class="empty-state">
+          <svg width="36" height="36" viewBox="0 0 36 36" fill="none"><rect x="5" y="9" width="26" height="20" rx="3" stroke="currentColor" stroke-width="1.4"/><path d="M5 15h26" stroke="currentColor" stroke-width="1.4"/><path d="M11 22h4M11 26h8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          <p>No expenses yet — start by adding your first entry.</p>
         </div>
         <ul id="expense-list" class="expense-list" role="list"></ul>
       </div>
+
     </div><!-- /tab-expenses -->
+
+
+    <!-- ══════════════════════════════════
+         TAB: BUDGET & SETTINGS
+    ══════════════════════════════════ -->
+    <div class="tab-panel" id="tab-settings">
+
+      <div class="card card-settings">
+        <div class="section-header">
+          <h2 class="section-title">Budget &amp; Settings</h2>
+          <span class="inline-saved" id="settings-saved">Saved.</span>
+        </div>
+
+        <!-- Monthly budget -->
+        <div class="settings-grid">
+          <div class="form-group">
+            <label class="form-label" for="set-budget">Monthly Budget <span class="optional-tag">(optional)</span></label>
+            <div class="input-wrap">
+              <span class="input-prefix">₦</span>
+              <input type="number" id="set-budget" class="form-input" placeholder="e.g. 50000" min="0" step="any"/>
+            </div>
+            <p class="settings-hint">Set a spending limit for the month. A progress bar will appear on your dashboard.</p>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="set-currency-name">Currency label <span class="optional-tag">(display only)</span></label>
+            <input type="text" id="set-currency-name" class="form-input" placeholder="e.g. Naira" maxlength="20"/>
+            <p class="settings-hint">Just a label shown in exports. Amounts are always stored as numbers.</p>
+          </div>
+        </div>
+
+        <hr class="divider"/>
+
+        <!-- Monthly allowance shortcut -->
+        <div class="form-group" style="max-width:420px">
+          <label class="form-label" for="set-allowance">Recurring Monthly Allowance <span class="optional-tag">(optional)</span></label>
+          <div class="input-wrap">
+            <span class="input-prefix">₦</span>
+            <input type="number" id="set-allowance" class="form-input" placeholder="e.g. 30000" min="0" step="any"/>
+          </div>
+          <p class="settings-hint">Save your usual monthly allowance here. A button below lets you log it instantly each month without filling the full income form.</p>
+        </div>
+        <div style="margin-top:var(--sp-4);display:flex;gap:var(--sp-3);align-items:center;flex-wrap:wrap;">
+          <button id="log-allowance-btn" class="btn btn--income btn--sm" disabled>
+            Log this month's allowance
+          </button>
+          <span id="allowance-logged-note" class="inline-saved" style="font-size:12px"></span>
+        </div>
+
+        <hr class="divider"/>
+
+        <div style="display:flex;gap:var(--sp-3);flex-wrap:wrap;">
+          <button id="save-settings-btn" class="btn btn--primary">Save Settings</button>
+          <button id="export-btn" class="btn btn--outline">Export data (JSON)</button>
+        </div>
+
+        <hr class="divider"/>
+        <!-- Danger zone -->
+        <div>
+          <p class="section-title" style="margin-bottom:var(--sp-3);">Danger zone</p>
+          <button id="reset-all-btn" class="btn btn--clear">Reset everything</button>
+          <p class="settings-hint" style="margin-top:var(--sp-2);">Deletes all expenses, income entries, and settings permanently.</p>
+        </div>
+      </div>
+
+    </div><!-- /tab-settings -->
 
     <!-- ══════════════════════════════════
          TAB: CHARTS
     ══════════════════════════════════ -->
     <div class="tab-panel" id="tab-charts">
-      <div class="card">
+
+      <div class="card" style="animation:sectionIn .35s ease both">
         <div class="section-header">
           <h2 class="section-title">Spending by Category</h2>
+          <span class="stat-sub" id="chart-total-label"></span>
         </div>
         <div class="chart-donut-wrap">
-          <canvas id="donut-canvas" width="220" height="220"></canvas>
+          <canvas id="donut-canvas" width="220" height="220" aria-label="Category donut chart"></canvas>
           <div class="donut-center">
             <p class="donut-center__label">Total</p>
             <p class="donut-center__amount" id="donut-total">₦0</p>
@@ -206,41 +355,53 @@
         </div>
         <div id="donut-legend" class="donut-legend"></div>
       </div>
-    </div><!-- /tab-charts -->
 
-    <!-- ══════════════════════════════════
-         TAB: SETTINGS
-    ══════════════════════════════════ -->
-    <div class="tab-panel" id="tab-settings">
-      <div class="card card-settings">
+      <div class="card" style="animation:sectionIn .35s ease both;animation-delay:.1s">
         <div class="section-header">
-          <h2 class="section-title">Budget &amp; Settings</h2>
+          <h2 class="section-title">Last 7 Days</h2>
+          <span class="stat-sub" id="week-total-label"></span>
         </div>
-        <div class="settings-grid">
-          <div class="form-group">
-            <label class="form-label" for="set-budget">Monthly Budget</label>
-            <div class="input-wrap">
-              <span class="input-prefix">₦</span>
-              <input type="number" id="set-budget" class="form-input" placeholder="e.g. 50000" min="0"/>
-            </div>
-            <p class="settings-hint">Set a spending limit for the month.</p>
+        <div class="bar-chart-wrap">
+          <canvas id="week-canvas" width="700" height="180" style="width:100%;height:auto" aria-label="7-day spending bar chart"></canvas>
+        </div>
+        <p class="chart-hint" id="week-hint"></p>
+      </div>
+
+      <div class="card" style="animation:sectionIn .35s ease both;animation-delay:.18s">
+        <div class="section-header">
+          <h2 class="section-title">Income vs Spending</h2>
+        </div>
+        <div class="compare-bars" id="compare-bars">
+          <div class="compare-row">
+            <span class="compare-label">Income</span>
+            <div class="compare-track"><div class="compare-fill compare-fill--income" id="cmp-income-fill" style="width:0%"></div></div>
+            <span class="compare-val stat-value--income" id="cmp-income-val">₦0</span>
+          </div>
+          <div class="compare-row">
+            <span class="compare-label">Spending</span>
+            <div class="compare-track"><div class="compare-fill compare-fill--spend" id="cmp-spend-fill" style="width:0%"></div></div>
+            <span class="compare-val" id="cmp-spend-val">₦0</span>
+          </div>
+          <div class="compare-row" id="cmp-budget-row" style="display:none">
+            <span class="compare-label">Budget</span>
+            <div class="compare-track"><div class="compare-fill compare-fill--budget" id="cmp-budget-fill" style="width:0%"></div></div>
+            <span class="compare-val stat-value--gold" id="cmp-budget-val">₦0</span>
           </div>
         </div>
-        <hr class="divider"/>
-        <div>
-          <p class="section-title" style="margin-bottom:var(--sp-3);">Danger zone</p>
-          <button id="save-settings-btn" class="btn btn--primary">Save Settings</button>
-          <button id="reset-all-btn" class="btn btn--clear" style="margin-left: 12px;">Reset everything</button>
+        <div id="charts-empty" class="empty-state" style="display:none">
+          <svg width="36" height="36" viewBox="0 0 36 36" fill="none"><rect x="4" y="20" width="6" height="12" rx="1" stroke="currentColor" stroke-width="1.4"/><rect x="15" y="12" width="6" height="20" rx="1" stroke="currentColor" stroke-width="1.4"/><rect x="26" y="6" width="6" height="26" rx="1" stroke="currentColor" stroke-width="1.4"/></svg>
+          <p>Add expenses to see your charts.</p>
         </div>
       </div>
-    </div><!-- /tab-settings -->
+
+    </div><!-- /tab-charts -->
 
   </main>
 
   <!-- ══════════════════════════════════
-       HELP MODAL (Hidden by default)
+       HELP MODAL
   ══════════════════════════════════ -->
-  <div id="help-overlay" class="help-overlay hidden" role="dialog" aria-modal="true">
+  <div id="help-overlay" class="help-overlay" role="dialog" aria-modal="true" aria-label="How to use Lagos Spend Tracker">
     <div class="help-modal">
       <div class="help-modal__header">
         <div>
@@ -255,27 +416,44 @@
         <div class="help-step">
           <div class="help-step__num">1</div>
           <div class="help-step__body">
-            <h3 class="help-step__title">Set your budget</h3>
-            <p class="help-step__desc">Go to <strong>Budget &amp; Settings</strong> and enter your monthly spending limit — e.g. ₦30,000.</p>
+            <h3 class="help-step__title">Set your budget <span class="help-tag">Optional</span></h3>
+            <p class="help-step__desc">Go to <strong>Budget &amp; Settings</strong> and enter your monthly spending limit — e.g. ₦30,000. Once saved, a live progress bar will appear on your dashboard showing how much you've used.</p>
           </div>
         </div>
         <div class="help-step">
           <div class="help-step__num">2</div>
           <div class="help-step__body">
-            <h3 class="help-step__title">Add your income</h3>
-            <p class="help-step__desc">Head to the <strong>Income</strong> tab and log where your money comes from — allowance, part-time job, etc.</p>
+            <h3 class="help-step__title">Add your income <span class="help-tag">Optional</span></h3>
+            <p class="help-step__desc">Head to the <strong>Income</strong> tab and log where your money comes from — allowance from parents, a part-time job, scholarship, freelance work, whatever it is. This unlocks your Balance card on the dashboard.</p>
           </div>
         </div>
         <div class="help-step">
           <div class="help-step__num">3</div>
           <div class="help-step__body">
             <h3 class="help-step__title">Record every expense</h3>
-            <p class="help-step__desc">Go to <strong>Expenses</strong> and add each spend. The habit is what makes it useful!</p>
+            <p class="help-step__desc">Go to <strong>Expenses</strong> and add each spend: the amount, what category it falls under (Food, Transport, etc.), the date, and an optional note like "Danfo ride to school". Do this daily — the habit is what makes it useful.</p>
+          </div>
+        </div>
+        <div class="help-step">
+          <div class="help-step__num">4</div>
+          <div class="help-step__body">
+            <h3 class="help-step__title">Check your Dashboard regularly</h3>
+            <p class="help-step__desc">Your dashboard shows total spent, your balance, average spend per transaction, and your biggest spending category. If you set a budget, you'll see exactly how much room you have left.</p>
+          </div>
+        </div>
+        <div class="help-step">
+          <div class="help-step__num">5</div>
+          <div class="help-step__body">
+            <h3 class="help-step__title">Use Charts to spot patterns</h3>
+            <p class="help-step__desc">The <strong>Charts</strong> tab shows a donut chart of your spending by category, a bar chart for the last 7 days, and a side-by-side income vs spending comparison. If Food is eating half your budget, you'll see it here immediately.</p>
           </div>
         </div>
       </div>
 
       <div class="help-footer">
+        <label class="help-dont-show">
+          <input type="checkbox" id="dont-show-help"/> Don't show this again
+        </label>
         <button class="btn btn--primary" id="help-got-it-btn">Got it, let's go →</button>
       </div>
     </div>
@@ -287,7 +465,7 @@
 
 </div><!-- /#app -->
 
-<!-- Link to separate JS file -->
+<!-- Link to your separate JS file -->
 <script src="script.js"></script>
 
 </body>
