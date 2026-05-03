@@ -36,26 +36,192 @@
 
     <main id="main-content">
 
-        <div class="tab-panel active" id="tab-dashboard">
-            <h2>Dashboard Placeholder</h2>
+        <!-- ══════════════════════════════════
+         TAB: DASHBOARD
+    ══════════════════════════════════ -->
+    <div class="tab-panel active" id="tab-dashboard">
+      <div id="summary-card">
+        <div class="stat-card stat-card--hero">
+          <div class="hero-body">
+            <div>
+              <p class="stat-label">Total Spent</p>
+              <p class="stat-amount" id="total-amount">₦0</p>
+              <p class="stat-sublabel" id="expense-count">No expenses yet</p>
+              <span class="over-budget-pill" id="over-budget-pill">⚠ Over budget</span>
+            </div>
+            <div id="budget-progress-wrap" hidden style="min-width:200px;flex:1;max-width:280px;">
+              <div class="budget-bar-meta">
+                <span id="budget-spent-label">₦0 spent</span>
+                <span id="budget-of-label">of ₦0</span>
+              </div>
+              <div class="budget-bar-track">
+                <div class="budget-bar-fill" id="budget-bar-fill" style="width:0%"></div>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div class="tab-panel" id="tab-income">
-            <h2>Income Placeholder</h2>
+        <div class="stat-grid" style="margin-top:var(--sp-3);">
+          <div class="stat-card stat-card--income">
+            <p class="stat-label">Total Income</p>
+            <p class="stat-value stat-value--income" id="dash-income">₦0</p>
+            <p class="stat-sub" id="dash-income-sub">No income added</p>
+          </div>
+          <div class="stat-card" id="balance-card">
+            <p class="stat-label">Balance</p>
+            <p class="stat-value" id="dash-balance">₦0</p>
+            <p class="stat-sub" id="dash-balance-sub">income − expenses</p>
+          </div>
+          <div class="stat-card" id="budget-stat-card" hidden>
+            <p class="stat-label">Budget Left</p>
+            <p class="stat-value stat-value--gold" id="dash-budget-left">₦0</p>
+            <p class="stat-sub" id="dash-budget-sub">this month</p>
+          </div>
         </div>
+      </div>
+    </div><!-- /tab-dashboard -->
 
-        <div class="tab-panel" id="tab-expenses">
-            <h2>Expenses Placeholder</h2>
+    <!-- ══════════════════════════════════
+         TAB: INCOME
+    ══════════════════════════════════ -->
+    <div class="tab-panel" id="tab-income">
+      <div class="card card-income">
+        <div class="section-header">
+          <h2 class="section-title">Add Income</h2>
         </div>
+        <form id="income-form" class="collapsible-form" novalidate>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="inc-amount">Amount (₦)</label>
+              <div class="input-wrap">
+                <span class="input-prefix">₦</span>
+                <input type="number" id="inc-amount" class="form-input" placeholder="15000" min="1" step="any" required/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="inc-source">Source</label>
+              <select id="inc-source" class="form-input form-select" required>
+                <option value="" disabled selected>Select source</option>
+                <option value="Allowance">Monthly Allowance</option>
+                <option value="Part-time">Part-time Job</option>
+                <option value="Freelance">Freelance</option>
+                <option value="Gift">Gift / Transfer</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="inc-date">Date</label>
+              <input type="date" id="inc-date" class="form-input" required/>
+            </div>
+          </div>
+          <div class="form-footer">
+            <button type="submit" class="btn btn--income">Add Income</button>
+            <span id="income-save-feedback" class="save-feedback" hidden>Saved.</span>
+          </div>
+        </form>
+      </div>
 
-        <div class="tab-panel" id="tab-charts">
-            <h2>Charts Placeholder</h2>
+      <div class="card" style="margin-top: 24px;">
+        <div class="section-header">
+          <h2 class="section-title">Income History</h2>
+          <button id="clear-income-btn" class="btn btn--clear btn--sm">Clear all</button>
         </div>
+        <ul id="income-list" class="expense-list" role="list"></ul>
+      </div>
+    </div><!-- /tab-income -->
 
-        <div class="tab-panel" id="tab-settings">
-            <h2>Settings Placeholder</h2>
+    <!-- ══════════════════════════════════
+         TAB: EXPENSES
+    ══════════════════════════════════ -->
+    <div class="tab-panel" id="tab-expenses">
+      <div class="card card-expenses">
+        <div class="section-header">
+          <h2 class="section-title">Add Expense</h2>
         </div>
+        <form id="expense-form" class="collapsible-form" novalidate>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="exp-amount">Amount (₦)</label>
+              <div class="input-wrap">
+                <span class="input-prefix">₦</span>
+                <input type="number" id="exp-amount" class="form-input" placeholder="2500" min="1" step="any" required/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="exp-category">Category</label>
+              <select id="exp-category" class="form-input form-select" required>
+                <option value="" disabled selected>Select category</option>
+                <option value="Food">Food</option>
+                <option value="Transport">Transport</option>
+                <option value="Utilities">Utilities</option>
+                <option value="Shopping">Shopping</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="exp-date">Date</label>
+              <input type="date" id="exp-date" class="form-input" required/>
+            </div>
+          </div>
+          <div class="form-footer">
+            <button type="submit" class="btn btn--primary">Add Expense</button>
+            <span id="expense-save-feedback" class="save-feedback" hidden>Saved.</span>
+          </div>
+        </form>
+      </div>
 
+      <div class="card" style="margin-top: 24px;">
+        <div class="section-header">
+          <h2 class="section-title">All Expenses</h2>
+          <button id="clear-expenses-btn" class="btn btn--clear btn--sm">Clear all</button>
+        </div>
+        <ul id="expense-list" class="expense-list" role="list"></ul>
+      </div>
+    </div><!-- /tab-expenses -->
+
+    <!-- ══════════════════════════════════
+         TAB: CHARTS
+    ══════════════════════════════════ -->
+    <div class="tab-panel" id="tab-charts">
+      <div class="card">
+        <div class="section-header">
+          <h2 class="section-title">Spending by Category</h2>
+        </div>
+        <div class="chart-donut-wrap">
+          <canvas id="donut-canvas" width="220" height="220"></canvas>
+          <div class="donut-center">
+            <p class="donut-center__label">Total</p>
+            <p class="donut-center__amount" id="donut-total">₦0</p>
+          </div>
+        </div>
+        <div id="donut-legend" class="donut-legend"></div>
+      </div>
+    </div><!-- /tab-charts -->
+
+    <!-- ══════════════════════════════════
+         TAB: SETTINGS
+    ══════════════════════════════════ -->
+    <div class="tab-panel" id="tab-settings">
+      <div class="card card-settings">
+        <div class="section-header">
+          <h2 class="section-title">Budget &amp; Settings</h2>
+        </div>
+        <div class="settings-grid">
+          <div class="form-group">
+            <label class="form-label" for="set-budget">Monthly Budget</label>
+            <div class="input-wrap">
+              <span class="input-prefix">₦</span>
+              <input type="number" id="set-budget" class="form-input" placeholder="e.g. 50000" min="0"/>
+            </div>
+          </div>
+        </div>
+        <hr class="divider"/>
+        <div>
+          <button id="save-settings-btn" class="btn btn--primary">Save Settings</button>
+          <button id="reset-all-btn" class="btn btn--clear" style="margin-left: 12px;">Reset everything</button>
+        </div>
+      </div>
+    </div><!-- /tab-settings -->
     </main>
 
     <footer id="site-footer">
